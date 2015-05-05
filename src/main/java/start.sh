@@ -1,0 +1,1 @@
+nohup /usr/java/jdk1.7.0_03/bin/java -Dresin.watchdog=test -Djava.util.logging.manager=com.caucho.log.LogManagerImpl -Djavax.management.builder.initial=com.caucho.jmx.MBeanServerBuilderImpl -Djava.awt.headless=true -Dresin.home=/usr/local/resin/ -Dresin.root=/usr/local/resin/ TestDl $1 &
