@@ -58,8 +58,7 @@ public class DlUtils {
 		return ret;
 	}
 
-	public static void writeFile(Path path, Map<String, String> urls)
-			throws IOException {
+	public static void writeFile(Path path, Map<String, String> urls) throws IOException {
 		// path = Paths.get(".", "urls.log");
 		Files.deleteIfExists(path);
 		Writer w = Files.newBufferedWriter(path);
@@ -92,26 +91,25 @@ public class DlUtils {
 		Files.list(path)
 				.filter(pa -> !Files.isDirectory(pa))
 				.forEach(
-						pa -> {
-							System.out
-									.println(" ======================================================================");
-							String fileName = pa.getFileName().toString();
-							System.out.println(" file name " + fileName);
+					pa -> {
+						System.out
+								.println(" ======================================================================");
+						String fileName = pa.getFileName().toString();
+						System.out.println(" file name " + fileName);
 
-							try {
-								Map<String, String> allUrls = filterLocal(pa);
+						try {
+							Map<String, String> allUrls = filterLocal(pa);
 
-								String ret = toFileName(fileName,
-										allUrls.size());
-								System.out.println(" final file name  = ["
-										+ ret + "]");
+							String ret = toFileName(fileName, allUrls.size());
+							System.out.println(" final file name  = [" + ret + "]");
 
-								Path toFile = Paths.get("./dlurl", ret);
-								writeFile(toFile, allUrls);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						});
+							Path toFile = Paths.get("./dlurl", ret);
+							writeFile(toFile, allUrls);
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+					});
 
 	}
 
@@ -123,9 +121,9 @@ public class DlUtils {
 		return title.substring(0, start);
 	}
 
-	public static Map<String, String> filterLines(List<String> allLines,
-			String baseUrl, List<String> checkTags, String videoFieldName,
-			String titleFieldName) {
+	public static Map<String, String> filterLines(List<String> allLines, String baseUrl,
+													List<String> checkTags, String videoFieldName,
+													String titleFieldName) {
 		Map<String, String> map = new HashMap<String, String>();
 
 		int count = 0;
@@ -155,9 +153,9 @@ public class DlUtils {
 
 			if (!map.containsKey(url)) {
 				map.put(url, fileName);
-			} else {
-				System.out
-						.println(" ===== duplicate : " + url + " " + fileName);
+			}
+			else {
+				System.out.println(" ===== duplicate : " + url + " " + fileName);
 			}
 		}
 		System.out.println(" count = " + map.size());
@@ -174,9 +172,8 @@ public class DlUtils {
 
 		List<String> allLines = br.lines().collect(Collectors.toList());
 
-		return filterLines(allLines, baseVedioPre,
-				Arrays.asList("data-video-id", "data-title"), "data-video-id",
-				"data-title");
+		return filterLines(allLines, baseVedioPre, Arrays.asList("data-video-id", "data-title"),
+			"data-video-id", "data-title");
 	}
 
 	public static List<String> httpsGet(String su) {
@@ -189,14 +186,16 @@ public class DlUtils {
 			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 
 			// dumpl all cert info
-			print_https_cert(con);
+			//			print_https_cert(con);
 
 			// dump all the content
 			List<String> lines = getContent(con);
 			return lines;
-		} catch (MalformedURLException e) {
+		}
+		catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -223,9 +222,11 @@ public class DlUtils {
 					System.out.println("\n");
 				}
 
-			} catch (SSLPeerUnverifiedException e) {
+			}
+			catch (SSLPeerUnverifiedException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 
@@ -241,8 +242,7 @@ public class DlUtils {
 			try {
 
 				System.out.println("****** Content of the URL ********");
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-						con.getInputStream()));
+				BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
 				String input;
 				while ((input = br.readLine()) != null) {
@@ -251,7 +251,8 @@ public class DlUtils {
 				}
 				br.close();
 
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 
@@ -259,8 +260,7 @@ public class DlUtils {
 		return lines;
 	}
 
-	public static String replaceMoreContent(String line)
-			throws UnsupportedEncodingException {
+	public static String replaceMoreContent(String line) throws UnsupportedEncodingException {
 		String ret = "";
 		try {
 			JSONObject json = JSONObject.parseObject(line);
@@ -268,17 +268,17 @@ public class DlUtils {
 				String value = json.getString(key);
 				ret += value;
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return ret;
 	}
 
-	public static void parseLines(String url, boolean isMoreUrl,
-			Map<String, String> fillMap, List<String> checkTags,
-			String vedioPre, String vedioTag, String titleTag)
-			throws UnsupportedEncodingException {
+	public static void parseLines(String url, boolean isMoreUrl, Map<String, String> fillMap,
+									List<String> checkTags, String vedioPre, String vedioTag,
+									String titleTag) throws UnsupportedEncodingException {
 		if (url == null) {
 			return;
 		}
@@ -299,12 +299,10 @@ public class DlUtils {
 			if (line.contains(DlUtils.MORE_TAG)) {
 				moreUrl = DlUtils.getFieldValue(DlUtils.MORE_TAG, line);
 				if (moreUrl != null && !moreUrl.equals("")) {
-					System.out.println("===================== find more url = "
-							+ moreUrl);
-				} else {
-					System.out
-							.println(" ===================  can not find more url = "
-									+ moreUrl);
+					System.out.println("===================== find more url = " + moreUrl);
+				}
+				else {
+					System.out.println(" ===================  can not find more url = " + moreUrl);
 				}
 			}
 
@@ -326,31 +324,29 @@ public class DlUtils {
 
 		}
 
-		Map<String, String> map = DlUtils.filterLines(lines, vedioPre,
-				checkTags, vedioTag, titleTag);
+		Map<String, String> map = DlUtils.filterLines(lines, vedioPre, checkTags, vedioTag,
+			titleTag);
 		for (String key : map.keySet()) {
 			String value = map.get(key);
 			if (fillMap.containsKey(key)) {
 				System.out.println(" ================================ [" + key
-						+ "] \n duplicate key " + value + " \n"
-						+ fillMap.get(key));
-			} else {
+						+ "] \n duplicate key " + value + " \n" + fillMap.get(key));
+			}
+			else {
 				fillMap.put(key, value);
 			}
 		}
 
 		if (moreUrl != null && !moreUrl.equals("")) {
 			String mu = baseUrl + moreUrl;
-			parseLines(mu, true, fillMap, checkTags, vedioPre, vedioTag,
-					titleTag);
-		} else {
-			parseLines(null, false, fillMap, checkTags, vedioPre, vedioTag,
-					titleTag);
+			parseLines(mu, true, fillMap, checkTags, vedioPre, vedioTag, titleTag);
+		}
+		else {
+			parseLines(null, false, fillMap, checkTags, vedioPre, vedioTag, titleTag);
 		}
 	}
 
-	public static void mapToFile(Map<String, String> map, String info)
-			throws IOException {
+	public static void mapToFile(Map<String, String> map, String info) throws IOException {
 
 		System.out.println(" ====================== ");
 		System.out.println(" final map size " + map.size());

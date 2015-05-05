@@ -52,8 +52,18 @@ public class TestDl {
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	public static void main(String[] args) throws InterruptedException,
-			IOException {
+	public static void main(String[] args) throws InterruptedException, IOException {
+		if (args != null && args.length > 0) {
+			int limit = -1;
+			try {
+				limit = Integer.parseInt(args[0]);
+			}
+			catch (Exception e) {}
+			if (limit > 0) {
+				Log.log("============== set limit to " + limit + " ==============");
+				NET_LIMIT = limit;
+			}
+		}
 		while (true) {
 			Thread.sleep(5000);
 
@@ -70,10 +80,11 @@ public class TestDl {
 			if (file.isFile()) {
 				curFile = file;
 				try {
-					Log.log("============== start down load from "
-							+ file.getName() + " ==============");
+					Log.log("============== start down load from " + file.getName()
+							+ " ==============");
 					dlFromFile(file);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -88,16 +99,16 @@ public class TestDl {
 
 		try {
 			urls.addAll(readMap(file));
-		} catch (IOException e1) {
+		}
+		catch (IOException e1) {
 			e1.printStackTrace();
 		}
 
-		Log.log("============== all file count " + urls.size() + " in "
-				+ file.getName() + " ==============");
+		Log.log("============== all file count " + urls.size() + " in " + file.getName()
+				+ " ==============");
 
 		if (urls.isEmpty()) {
-			Log.log("============== " + file.getName()
-					+ " is empty ==============");
+			Log.log("============== " + file.getName() + " is empty ==============");
 			return;
 		}
 
@@ -115,7 +126,8 @@ public class TestDl {
 
 			try {
 				Thread.sleep(500);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
@@ -124,7 +136,8 @@ public class TestDl {
 			for (ControlFileFetch work : works) {
 				if (!work.finish) {
 					allFinish = false;
-				} else {
+				}
+				else {
 					finishWorks.add(work);
 				}
 			}
@@ -148,32 +161,29 @@ public class TestDl {
 
 		file.delete();
 		// exe.shutdown();
-		Log.log("============== all finish from " + file.getName()
-				+ "==============");
+		Log.log("============== all finish from " + file.getName() + "==============");
 
 	}
 
 	public static void moveFinishFile(String fileName) {
 		try {
-			Log.log("============== mv finish file " + fileName
-					+ " ==============");
+			Log.log("============== mv finish file " + fileName + " ==============");
 			// done dir
 			String curFileName = curFile.getName();
-			File dir = new File("." + File.separator + "done" + File.separator
-					+ curFileName);
+			File dir = new File("." + File.separator + "done" + File.separator + curFileName);
 			dir.mkdirs();
 
 			// mv
 			String path = "." + File.separator + fileName;
 			File file = new File(path);
 			if (file.exists()) {
-				file.renameTo(new File(dir.getPath() + File.separator
-						+ fileName));
+				file.renameTo(new File(dir.getPath() + File.separator + fileName));
 			}
 
 			File infoFile = new File("." + File.separator + fileName + ".info");
 			infoFile.delete();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -191,7 +201,8 @@ public class TestDl {
 				ret.add(urls);
 			}
 			br.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -218,29 +229,30 @@ public class TestDl {
 			// rename to old
 			curFile.delete();
 			file.renameTo(new File(curFileName));
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Log.log("保存下载信息出错:" + e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
 
-	public static List<ControlFileFetch> foo(List<String[]> urls,
-			final AtomicLong limit, int threadCount) {
+	public static List<ControlFileFetch> foo(List<String[]> urls, final AtomicLong limit,
+												int threadCount) {
 		List<ControlFileFetch> ret = new ArrayList<ControlFileFetch>();
 		for (String[] pair : urls) {
 			String url = pair[0];
 			final String fileName = pair[1];
 
 			try {
-				TranBean bean = new TranBean(url, ".", fileName, threadCount,
-						limit);
+				TranBean bean = new TranBean(url, ".", fileName, threadCount, limit);
 				ControlFileFetch fileFetch = new ControlFileFetch(bean);
 				fileFetch.pair = pair;
 				exe.submit(fileFetch);
 				ret.add(fileFetch);
 				// fileFetch.start();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				Log.log(" start work fail " + url + " " + fileName);
 				// Log.log("多线程下载文件出错:" + e.getMessage());
 				e.printStackTrace();
@@ -265,9 +277,11 @@ public class TestDl {
 			// dump all the content
 			// List<String> lines = getContent(con);
 			// return lines;
-		} catch (MalformedURLException e) {
+		}
+		catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -287,9 +301,11 @@ public class TestDl {
 				if (map.containsKey("Location")) {
 					return map.get("Location").get(0);
 				}
-			} catch (SSLPeerUnverifiedException e) {
+			}
+			catch (SSLPeerUnverifiedException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 
@@ -330,15 +346,16 @@ class ControlFileFetch implements Runnable {
 
 	public ControlFileFetch(TranBean tranBean) {
 		this.tranBean = tranBean;
-		fileName = new File(tranBean.getFileDir() + File.separator
-				+ tranBean.getFileName() + ".info"); // 创建文件
+		fileName = new File(tranBean.getFileDir() + File.separator + tranBean.getFileName()
+				+ ".info"); // 创建文件
 		// Log.log(tranBean.getFileDir() + File.separator +
 		// tranBean.getFileName()
 		// + ".info");
 		if (fileName.exists()) {
 			isFitstGet = false;
 			readInfo();
-		} else {
+		}
+		else {
 			startPosition = new long[tranBean.getCount()];
 			endPosition = new long[tranBean.getCount()];
 		}
@@ -358,20 +375,23 @@ class ControlFileFetch implements Runnable {
 						Log.log(fileName + " === retry =====" + retry--);
 						try {
 							Thread.sleep(1000);
-						} catch (InterruptedException e1) {
+						}
+						catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
 					}
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 
 			if (httpUrl != null) {
 				this.httpUrl = httpUrl;
-			} else {
-				Log.log("=======  get http url fail , " + tranBean.getWebAddr()
-						+ " " + tranBean.getFileName());
+			}
+			else {
+				Log.log("=======  get http url fail , " + tranBean.getWebAddr() + " "
+						+ tranBean.getFileName());
 				return;
 			}
 
@@ -382,15 +402,16 @@ class ControlFileFetch implements Runnable {
 					if (fileLength > 0) {
 						break;
 					}
-					System.out
-							.println(fileName + " === getFieldSize =====" + j);
+					System.out.println(fileName + " === getFieldSize =====" + j);
 				}
 
 				if (fileLength == -1) {
 					System.err.println(fileName + " 文件长度为止");
-				} else if (fileLength == -2) {
+				}
+				else if (fileLength == -2) {
 					System.err.println(fileName + "不能访问文件");
-				} else {
+				}
+				else {
 					// 循环划分 每个线程要下载的文件的开始位置
 					for (int i = 0; i < startPosition.length; i++) {
 						startPosition[i] = (long) (i * (fileLength / startPosition.length));
@@ -402,7 +423,8 @@ class ControlFileFetch implements Runnable {
 					// 设置最后一个 线程的下载 结束位置 文件的的长度
 					endPosition[endPosition.length - 1] = fileLength;
 				}
-			} else {
+			}
+			else {
 				fileLength = endPosition[endPosition.length - 1];
 			}
 			// 创建 子线程数量的数组
@@ -415,12 +437,10 @@ class ControlFileFetch implements Runnable {
 			// TestDl.perSec.set(TestDl.limit);
 
 			for (int i = 0; i < startPosition.length; i++) {
-				childThread[i] = new FileFetch(this.httpUrl,
-						tranBean.getFileDir() + File.separator
-								+ tranBean.getFileName(), startPosition[i],
-						endPosition[i], i, this.limit);
-				Log.log(fileName + "线程" + (i + 1) + ",的开始位置="
-						+ startPosition[i] + ",结束位置=" + endPosition[i]);
+				childThread[i] = new FileFetch(this.httpUrl, tranBean.getFileDir() + File.separator
+						+ tranBean.getFileName(), startPosition[i], endPosition[i], i, this.limit);
+				Log.log(fileName + "线程" + (i + 1) + ",的开始位置=" + startPosition[i] + ",结束位置="
+						+ endPosition[i]);
 				childThread[i].start();
 			}
 
@@ -445,8 +465,7 @@ class ControlFileFetch implements Runnable {
 						long dlCount = partLength - remain;
 
 						long percent = (dlCount * 100) / partLength;
-						Log.log(fileName + "线程" + (i + 1) + " " + percent
-								+ " % ");
+						Log.log(fileName + "线程" + (i + 1) + " " + percent + " % ");
 					}
 				}
 
@@ -480,13 +499,14 @@ class ControlFileFetch implements Runnable {
 
 			Log.log("============== DownLoad file " + fileName + " finish ");
 			Log.log(" use time " + useTime / 1000 + " s ," + " file length "
-					+ ((fileLength / 1024) / 1024) + ", speed " + speed
-					+ " k/s ");
-		} catch (Exception e) {
+					+ ((fileLength / 1024) / 1024) + ", speed " + speed + " k/s ");
+		}
+		catch (Exception e) {
 			Log.log(fileName + "下载文件出错:" + e.getMessage());
 			try {
 				Thread.sleep(500);
-			} catch (InterruptedException e1) {
+			}
+			catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
@@ -503,7 +523,8 @@ class ControlFileFetch implements Runnable {
 				output.writeLong(childThread[i].endPosition);
 			}
 			output.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Log.log(fileName + "保存下载信息出错:" + e.getMessage());
 			e.printStackTrace();
 		}
@@ -516,8 +537,7 @@ class ControlFileFetch implements Runnable {
 		try {
 			URL url = new URL(this.httpUrl); // 根据网址传入网址创建URL对象
 			// 打开连接对象
-			HttpURLConnection httpConnection = (HttpURLConnection) url
-					.openConnection();
+			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
 			// 设置描述发出HTTP请求的终端信息
 			httpConnection.setRequestProperty("User-Agent", "NetFox");
 			int responseCode = httpConnection.getResponseCode();
@@ -536,16 +556,17 @@ class ControlFileFetch implements Runnable {
 				head = httpConnection.getHeaderFieldKey(i); // 获取文件头部信息
 				if (head != null) {
 					if (head.equals("Content-Length")) { // 根据头部信息获取文件长度
-						fileLength = Long.parseLong(httpConnection
-								.getHeaderField(head));
+						fileLength = Long.parseLong(httpConnection.getHeaderField(head));
 						break;
 					}
-				} else {
+				}
+				else {
 					break;
 				}
 			}
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 			Log.log(fileName + "获取文件长度出错:" + e.getMessage());
 		}
@@ -562,8 +583,7 @@ class ControlFileFetch implements Runnable {
 	private void readInfo() {
 		try {
 			// 创建数据输出流
-			DataInputStream input = new DataInputStream(new FileInputStream(
-					fileName));
+			DataInputStream input = new DataInputStream(new FileInputStream(fileName));
 			int count = input.readInt(); // 读取分成的线程下载个数
 			startPosition = new long[count]; // 设置开始线程
 			endPosition = new long[count]; // 设置结束线程
@@ -572,7 +592,8 @@ class ControlFileFetch implements Runnable {
 				endPosition[i] = input.readLong(); // 读取每个线程的结束位置
 			}
 			input.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Log.log(fileName + "读取文件指针位置出错:" + e.getMessage());
 			e.printStackTrace();
 		}
@@ -600,9 +621,8 @@ class FileFetch extends Thread {
 
 	AtomicLong limit;
 
-	public FileFetch(String surl, String sname, long startPosition,
-			long endPosition, int threadID, AtomicLong limit)
-			throws IOException {
+	public FileFetch(String surl, String sname, long startPosition, long endPosition, int threadID,
+						AtomicLong limit) throws IOException {
 		this.webAddr = surl;
 		this.startPosition = startPosition;
 		this.endPosition = endPosition;
@@ -617,8 +637,7 @@ class FileFetch extends Thread {
 		while (startPosition < endPosition && !isStopGet) {
 			try {
 				URL url = new URL(webAddr); // 根据网络资源创建URL对象
-				HttpURLConnection httpConnection = (HttpURLConnection) url
-						.openConnection(); // 创建 打开的连接对象
+				HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection(); // 创建 打开的连接对象
 				// 设置描述发出的HTTP请求的终端的信息
 				httpConnection.setRequestProperty("User-Agent", "NetFox");
 				String sproperty = "bytes=" + startPosition + "-";
@@ -631,8 +650,8 @@ class FileFetch extends Thread {
 				byte[] b = new byte[1024];
 				int nRead;
 				// 循环将文件下载制定目录
-				while ((nRead = input.read(b, 0, 1024)) > 0
-						&& startPosition < endPosition && !isStopGet) {
+				while ((nRead = input.read(b, 0, 1024)) > 0 && startPosition < endPosition
+						&& !isStopGet) {
 					startPosition += fileAccessI.write(b, 0, nRead); // 调用方法将内容写入文件
 
 					long remain = this.limit.addAndGet(-nRead);
@@ -648,11 +667,13 @@ class FileFetch extends Thread {
 				if (startPosition >= endPosition) {
 					downLoadOver = true; // 这里判断没问题么？
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 				try {
 					Thread.sleep(500);
-				} catch (InterruptedException e1) {
+				}
+				catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
 			}
@@ -670,7 +691,8 @@ class FileFetch extends Thread {
 			String header = con.getHeaderFieldKey(i); // 循环答应回应的头信息
 			if (header != null) {
 				Log.log(header + ":" + con.getHeaderField(header));
-			} else
+			}
+			else
 				break;
 		}
 	}
@@ -707,7 +729,8 @@ class FileAccess implements Serializable {
 		try {
 			saveFile.write(b, start, length);
 			n = length;
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -743,8 +766,7 @@ class TranBean {
 	// this("", "", "", 3, null);
 	// } // 带参数的构造方法
 
-	public TranBean(String webAddr, String fileDir, String fileName, int count,
-			AtomicLong limit) {
+	public TranBean(String webAddr, String fileDir, String fileName, int count, AtomicLong limit) {
 		this.webAddr = webAddr;
 		this.fileDir = fileDir;
 		this.fileName = fileName;
@@ -796,16 +818,15 @@ class TranBean {
 
 // 线程运行信息显示的日志类
 class Log {
-	static SimpleDateFormat formatter = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss");
+	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	public Log() {
-	}
+	public Log() {}
 
 	public static void sleep(int nsecond) {
 		try {
 			Thread.sleep(nsecond);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Log.log("线程沉睡");
 		}
 	}
