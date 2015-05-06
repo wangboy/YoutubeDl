@@ -367,12 +367,12 @@ class ControlFileFetch implements Runnable {
 			Log.log(" start download " + fileName);
 			// to http
 			String httpUrl = null;
-			int retry = 20;
-			while (httpUrl == null && retry > 0) {
+			int retry = 0;
+			while (httpUrl == null && retry <= 20) {
 				try {
 					httpUrl = TestDl.httpsGet(tranBean.getWebAddr());
 					if (httpUrl == null) {
-						Log.log(fileName + " === retry =====" + retry--);
+						Log.log(fileName + " === retry =====" + retry++);
 						try {
 							Thread.sleep(1000);
 						}

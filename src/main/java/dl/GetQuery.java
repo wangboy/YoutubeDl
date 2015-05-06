@@ -17,13 +17,14 @@ public class GetQuery {
 	/////////////////query param
 	//	static String BASE_QUERY_URL = "https://u.f-q.me/results?search_sort=$SORT&search_query=$QUERY&page=$PAGE";
 	static String BASE_QUERY_URL = "https://u.f-q.me/results?search_query=$QUERY&page=$PAGE";
+
 	//	static String BASE_QUERY_URL = "https://u.f-q.me/results?lclk=long&filters=long&search_query=$QUERY&page=$PAGE"; //long
 
 	//https://u.f-q.me/results?lclk=long&filters=long&search_query=mobility
 
 	static String SEARCH_SORT = "video_view_count";
 
-	static String SEARCH_QUERY = "mobility"; //keywords
+	static String SEARCH_QUERY = "shoulder mobility"; //keywords
 
 	//	static String PAGE_COUNT = "page";
 

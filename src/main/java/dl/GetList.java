@@ -18,7 +18,8 @@ public class GetList {
 //	static String url = "https://u.f-q.me/playlist?list=PLCBE8A701BFC32D1E"; //Exercises_and_Instruction_751
 	
 //	static String url = "https://u.f-q.me/playlist?list=PLI9OxtiOLZQjSaW0Ep_s6-F2Khun3K4DE"; //The Daily BS  //Barbell Shrugged
-	static String url = "https://u.f-q.me/playlist?list=PLI9OxtiOLZQhrtiXcWZKujR3wpTEnqaGe"; //Technique WOD  //Barbell Shrugged
+//	static String url = "https://u.f-q.me/playlist?list=PLI9OxtiOLZQhrtiXcWZKujR3wpTEnqaGe"; //Technique WOD  //Barbell Shrugged
+	static String url = "https://u.f-q.me/playlist?list=PLdWvFCOAvyr2tErd8xbxjDTVpJU4hjk-w";
 
 	static String VIDEO_TAG = "data-video-id";
 
