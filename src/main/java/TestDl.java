@@ -33,19 +33,17 @@ import javax.net.ssl.SSLPeerUnverifiedException;
  */
 public class TestDl {
 
-	public static int NET_LIMIT = 300 * 1024; // 1000k
+	public static int NET_LIMIT = 300 * 1024;
 
 	public static File curFile = null;
 
 	public static ExecutorService exe = Executors.newFixedThreadPool(2);
 
-	static int threadCount = 2;
+	static int threadCount = 4;
 
 	static String doneDir = "done";
 
 	static String urlDir = "url";
-
-	// TODO 大文件的上传完删除
 
 	/**
 	 * @param args
@@ -119,7 +117,7 @@ public class TestDl {
 		while (true) {
 			boolean allFinish = true;
 			// reset limit
-			limit.set(NET_LIMIT);
+			limit.set(NET_LIMIT / 2);
 			synchronized (limit) {
 				limit.notifyAll();
 			}
