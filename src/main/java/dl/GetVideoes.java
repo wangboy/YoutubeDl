@@ -20,7 +20,7 @@ public class GetVideoes {
 //	static String url = "https://u.f-q.me/user/womensworkoutchannel/videos"; // womensworkoutchannel
 //	static String url = "https://u.f-q.me/user/BikiniModelFitness/videos"; // BikiniModelFitness
 	
-	static String url = "https://u.f-q.me/user/lesleyfightmaster/videos";
+	static String url = "https://u.f-q.me/user/YougiftedRussia/videos";
 	//
 	// static String url = "https://u.f-q.me/user/BikiniModelFitness/videos";
 	// //BikiniModelFitness

@@ -12,14 +12,14 @@ public class GetList {
 
 	//	static String url = "https://u.f-q.me/playlist?list=PLB67wXqPqtMcNVA-UndNUy7bahGJzLQbT"; //MobilityWOD_Episodes_199
 	//	static String url = "https://u.f-q.me/playlist?list=PLdWvFCOAvyr0G-RZOvzlX1EroaIWA90bD"; //Classics_The_CrossFit_Games_176
-//	static String url = "https://u.f-q.me/playlist?list=PL5A46ABC019107E6E"; //Barbell Shrugged 173
+	//	static String url = "https://u.f-q.me/playlist?list=PL5A46ABC019107E6E"; //Barbell Shrugged 173
 
 	//	static String url = "https://u.f-q.me/playlist?list=PLdWvFCOAvyr0BNll5u6WbeR7RBerKczdB"; //2015_CrossFit_Games_Update_38
-//	static String url = "https://u.f-q.me/playlist?list=PLCBE8A701BFC32D1E"; //Exercises_and_Instruction_751
-	
-//	static String url = "https://u.f-q.me/playlist?list=PLI9OxtiOLZQjSaW0Ep_s6-F2Khun3K4DE"; //The Daily BS  //Barbell Shrugged
-//	static String url = "https://u.f-q.me/playlist?list=PLI9OxtiOLZQhrtiXcWZKujR3wpTEnqaGe"; //Technique WOD  //Barbell Shrugged
-	static String url = "https://u.f-q.me/playlist?list=PLdWvFCOAvyr2tErd8xbxjDTVpJU4hjk-w";
+	//	static String url = "https://u.f-q.me/playlist?list=PLCBE8A701BFC32D1E"; //Exercises_and_Instruction_751
+
+	//	static String url = "https://u.f-q.me/playlist?list=PLI9OxtiOLZQjSaW0Ep_s6-F2Khun3K4DE"; //The Daily BS  //Barbell Shrugged
+	//	static String url = "https://u.f-q.me/playlist?list=PLI9OxtiOLZQhrtiXcWZKujR3wpTEnqaGe"; //Technique WOD  //Barbell Shrugged
+	static String url = "https://u.f-q.me/playlist?list=PL15E0D737E93BDEA3";
 
 	static String VIDEO_TAG = "data-video-id";
 
@@ -31,8 +31,7 @@ public class GetList {
 
 	public static void main(String[] args) throws IOException {
 		Map<String, String> map = new HashMap<String, String>();
-		DlUtils.parseLines(url, false, map, CHECK_TAGS, VIDEO_PRE, VIDEO_TAG,
-				TITLE_TAG);
+		DlUtils.parseLines(url, false, map, CHECK_TAGS, VIDEO_PRE, VIDEO_TAG, TITLE_TAG);
 		DlUtils.mapToFile(map, "list");
 	}
 

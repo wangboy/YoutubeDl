@@ -186,6 +186,13 @@ public class TestDl {
 		}
 	}
 
+	public static boolean validFileName(String fileName) {
+		if (fileName.contains("_Deleted_Video_.mp4") || fileName.contains("_Private_Video_.mp4")) {
+			return false;
+		}
+		return true;
+	}
+
 	public static List<String[]> readMap(File file) throws IOException {
 		List<String[]> ret = new ArrayList<String[]>();
 		try {
@@ -196,6 +203,13 @@ public class TestDl {
 			String line = null;
 			while ((line = br.readLine()) != null && !line.equals("")) {
 				String[] urls = line.split(" ");
+
+				String url = urls[0];
+				String fileName = urls[1];
+				if (!validFileName(fileName)) {
+					Log.log("===<<<<<<<<<<<<<<<<== exclude invalid file " + url + " = " + fileName);
+					continue;
+				}
 				ret.add(urls);
 			}
 			br.close();

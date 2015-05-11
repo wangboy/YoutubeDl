@@ -16,8 +16,10 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -356,11 +358,28 @@ public class DlUtils {
 		String ti = map.remove(DlUtils.title);
 		map.remove(DlUtils.count);
 
+		Set<String> keys = new HashSet<>(map.keySet());
+		for (String key : keys) {
+			String fn = map.get(key);
+			if (!validFileName(fn)) {
+				System.out.println("===<<<<<<<<<<<<<<<<== exclude invalid file " + key + " = "
+						+ map.get(key));
+				map.remove(key);
+			}
+		}
+
 		String fileName = DlUtils.toFileName(ti, map.size());
 		fileName = fileName + "_" + info;
 		System.out.println(" fileName is [" + fileName + "]");
 
 		Path toFile = Paths.get("./dlurl", fileName);
 		DlUtils.writeFile(toFile, map);
+	}
+
+	public static boolean validFileName(String fileName) {
+		if (fileName.contains("_Deleted_Video_.mp4") || fileName.contains("_Private_Video_.mp4")) {
+			return false;
+		}
+		return true;
 	}
 }
