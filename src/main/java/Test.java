@@ -29,11 +29,13 @@ public class Test {
 				File dir = new File("." + File.separator + "done"
 						+ File.separator + f.getName());
 				dir.mkdirs();
+				
+				
 				// file.mkdir();
 			}
 		}
 	}
-
+	
 	public static List<String> httpsGet(String su) {
 
 		String https_url = su;

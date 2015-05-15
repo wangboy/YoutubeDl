@@ -32,6 +32,8 @@ import javax.net.ssl.SSLPeerUnverifiedException;
  * @author Bin Windows NT 6.1
  */
 public class TestDl {
+	
+	//TODO 自动调节速度
 
 	public static int NET_LIMIT = 300 * 1024;
 
@@ -153,6 +155,24 @@ public class TestDl {
 			}
 
 			if (allFinish) {
+				break;
+			}
+
+			//check all fail 
+			boolean allFail = true;
+			for (ControlFileFetch work : works) {
+				if (work.fail == ControlFileFetch.FailType.NONE) {
+					allFail = false;
+					break;
+				}
+			}
+			if (allFail) {
+				Log.log("============== all work fail from " + file.getName() + "==============");
+				for (ControlFileFetch work : works) {
+					Log.log("==============  work fail " + work.fileName + " for " + work.fail
+							+ "==============");
+					Log.log(work.pair[0] + " " + work.pair[1]);
+				}
 				break;
 			}
 		}
@@ -330,6 +350,17 @@ public class TestDl {
 
 // 扩展多线程类,负责文件的抓取,控制内部线程
 class ControlFileFetch implements Runnable {
+
+	public static enum FailType {
+		NONE,
+
+		URL_FAIL,
+
+		GET_LENGTH_FAIL,
+
+		;
+	}
+
 	TranBean tranBean = null; // 扩展信息bean
 
 	long[] startPosition; // 开始位置
@@ -355,6 +386,8 @@ class ControlFileFetch implements Runnable {
 	public boolean finish = false;
 
 	public String[] pair = null;
+
+	public FailType fail = FailType.NONE;
 
 	public ControlFileFetch(TranBean tranBean) {
 		this.tranBean = tranBean;
@@ -404,6 +437,7 @@ class ControlFileFetch implements Runnable {
 			else {
 				Log.log("=======  get http url fail , " + tranBean.getWebAddr() + " "
 						+ tranBean.getFileName());
+				this.fail = FailType.URL_FAIL;
 				return;
 			}
 
@@ -414,14 +448,18 @@ class ControlFileFetch implements Runnable {
 					if (fileLength > 0) {
 						break;
 					}
-					System.out.println(fileName + " === getFieldSize =====" + j);
+					Log.log(fileName + " === getFieldSize =====" + j);
 				}
 
 				if (fileLength == -1) {
-					System.err.println(fileName + " 文件长度为止");
+					Log.log("=======  get fileLength fail , " + fileName + " 文件长度为止");
+					this.fail = FailType.GET_LENGTH_FAIL;
+					return;
 				}
 				else if (fileLength == -2) {
-					System.err.println(fileName + "不能访问文件");
+					Log.log("=======  get fileLength fail , " + fileName + "不能访问文件");
+					this.fail = FailType.GET_LENGTH_FAIL;
+					return;
 				}
 				else {
 					// 循环划分 每个线程要下载的文件的开始位置
@@ -477,7 +515,8 @@ class ControlFileFetch implements Runnable {
 						long dlCount = partLength - remain;
 
 						long percent = (dlCount * 100) / partLength;
-						Log.log(fileName + "线程" + (i + 1) + " " + percent + " % ");
+						Log.log(fileName + "线程" + (i + 1) + " " + percent + " % , remain = "
+								+ remain / 1024 + " kb");
 					}
 				}
 
@@ -494,7 +533,7 @@ class ControlFileFetch implements Runnable {
 
 				// TestDl.perSec.set(TestDl.limit);
 			}
-			// System.err.println("文件下载结束!");
+			// Log.log("文件下载结束!");
 			savePosition();
 
 			finish = true;
@@ -717,6 +756,8 @@ class FileFetch extends Thread {
 
 // 存储文件的类
 class FileAccess implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	RandomAccessFile saveFile; // 要保存的文件
 
 	long position;
@@ -846,9 +887,4 @@ class Log {
 	public static void log(String message) { // 显示日志信息
 		System.err.println("[" + formatter.format(new Date()) + "]:" + message);
 	}
-
-	// public static void log(int message) { // 显示日志信息
-	// System.err.println(message);
-
-	// }
 }

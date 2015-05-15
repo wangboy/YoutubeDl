@@ -24,7 +24,7 @@ public class GetQuery {
 
 	static String SEARCH_SORT = "video_view_count";
 
-	static String SEARCH_QUERY = "rogue power rack"; //===========keywords
+	static String SEARCH_QUERY = "shoulder warm up"; //===========keywords
 
 	//	static String PAGE_COUNT = "page";
 
