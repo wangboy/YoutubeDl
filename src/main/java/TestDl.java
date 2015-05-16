@@ -32,7 +32,7 @@ import javax.net.ssl.SSLPeerUnverifiedException;
  * @author Bin Windows NT 6.1
  */
 public class TestDl {
-	
+
 	//TODO 自动调节速度
 
 	public static int NET_LIMIT = 300 * 1024;
@@ -533,14 +533,26 @@ class ControlFileFetch implements Runnable {
 
 				// TestDl.perSec.set(TestDl.limit);
 			}
+
 			// Log.log("文件下载结束!");
 			savePosition();
 
 			finish = true;
+			
+			//close file
+			Log.log("======= close file " + fileName);
+			for (int i = 0; i < startPosition.length; i++) { // 循环实现下载文件
+				try {
+					childThread[i].fileAccessI.saveFile.close();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
+			//print speed 
 			long end = System.currentTimeMillis();
 			long useTime = end - start;
-
 			long speed = 0;
 			if (useTime != 0) {
 				speed = (long) ((fileLength / 1024) / (useTime / 1000d));
