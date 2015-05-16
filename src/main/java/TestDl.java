@@ -33,8 +33,6 @@ import javax.net.ssl.SSLPeerUnverifiedException;
  */
 public class TestDl {
 
-	//TODO 自动调节速度
-
 	public static int NET_LIMIT = 300 * 1024;
 
 	public static File curFile = null;
@@ -46,6 +44,8 @@ public class TestDl {
 	static String doneDir = "done";
 
 	static String urlDir = "url";
+
+	static int INIT_LIMIT = NET_LIMIT;
 
 	/**
 	 * @param args
@@ -61,9 +61,14 @@ public class TestDl {
 			catch (Exception e) {}
 			if (limit > 0) {
 				Log.log("============== set limit to " + limit + " ==============");
-				NET_LIMIT = limit;
+				INIT_LIMIT = limit;
+				NET_LIMIT = INIT_LIMIT;
 			}
 		}
+
+		//check space and cut limit
+		startSpaceCheckThread();
+
 		while (true) {
 			Thread.sleep(5000);
 
@@ -71,6 +76,35 @@ public class TestDl {
 		}
 
 		// exe.shutdown();
+	}
+
+	public static void startSpaceCheckThread() {
+		final File file = new File(".");
+		new Thread() {
+			public void run() {
+				while (true) {
+					Log.sleep(5000);
+					//					long free = file.getFreeSpace();
+					long all = file.getTotalSpace();
+					long useable = file.getUsableSpace();
+
+					int useablePercent = (int) (useable * 100 / all);
+
+					Log.log(" ===== check space : all = " + all + " , useable = " + useable
+							+ " , useablePer = " + useablePercent + " %");
+
+					if (useablePercent < 30) {
+						int slow = 100 * 1000;
+						NET_LIMIT = slow;
+						Log.log(" ===== slow limit to " + slow + " =====");
+					}
+					else {
+						Log.log(" ===== resume limit to " + INIT_LIMIT + " =====");
+						NET_LIMIT = INIT_LIMIT;
+					}
+				}
+			}
+		}.start();
 	}
 
 	public static void dlFromDir(String dir) {
@@ -538,7 +572,7 @@ class ControlFileFetch implements Runnable {
 			savePosition();
 
 			finish = true;
-			
+
 			//close file
 			Log.log("======= close file " + fileName);
 			for (int i = 0; i < startPosition.length; i++) { // 循环实现下载文件
@@ -798,18 +832,6 @@ class FileAccess implements Serializable {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// if (count++ % 1000 == 0) {
-		// try {
-		// Log.log(this.saveFile.length() + "  " + this.fileSize);
-		// Log.log(" to file " + length + " bytes ");
-		// this.fileSize = this.saveFile.length();
-		// }
-		// catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
 
 		return n;
 	}
