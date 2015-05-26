@@ -24,7 +24,7 @@ public class GetQuery {
 
 	static String SEARCH_SORT = "video_view_count";
 
-	static String SEARCH_QUERY = "shoulder warm up"; //===========keywords
+	static String SEARCH_QUERY = "muscle balance"; //===========keywords
 
 	//	static String PAGE_COUNT = "page";
 
@@ -33,14 +33,18 @@ public class GetQuery {
 	static List<String> CHECK_TAGS = Arrays.asList("/watch?", TITLE_TAG, "Duration");
 
 	public static void main(String[] args) throws IOException {
+		getQuery(SEARCH_QUERY);
+	}
 
-		SEARCH_QUERY = SEARCH_QUERY.replace(" ", "+");
+	public static Map<String, String> getQuery(String queryWords) throws IOException {
+
+		queryWords = queryWords.replace(" ", "+");
 
 		Map<String, String> allMap = new HashMap<String, String>();
 
 		for (int i = 1; i <= 5; i++) {
-			String url = BASE_QUERY_URL.replace("$SORT", SEARCH_SORT)
-					.replace("$QUERY", SEARCH_QUERY).replace("$PAGE", i + "");
+			String url = BASE_QUERY_URL.replace("$SORT", SEARCH_SORT).replace("$QUERY", queryWords)
+					.replace("$PAGE", i + "");
 
 			System.out.println("query : " + url);
 
@@ -59,6 +63,7 @@ public class GetQuery {
 
 		allMap.put(DlUtils.title, SEARCH_QUERY.replace("+", "_"));
 		DlUtils.mapToFile(allMap, "query");
-	}
 
+		return allMap;
+	}
 }
