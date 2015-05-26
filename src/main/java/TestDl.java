@@ -96,10 +96,10 @@ public class TestDl {
 					if (useablePercent < 30) {
 						int slow = 100 * 1000;
 						NET_LIMIT = slow;
-						Log.log(" ===== slow limit to " + slow + " =====");
+						Log.log(" ===== slow limit to " + slow / 1024 + " kb =====");
 					}
 					else {
-						Log.log(" ===== resume limit to " + INIT_LIMIT + " =====");
+						Log.log(" ===== resume limit to " + INIT_LIMIT / 1024 + " kb =====");
 						NET_LIMIT = INIT_LIMIT;
 					}
 				}

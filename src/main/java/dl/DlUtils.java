@@ -151,8 +151,11 @@ public class DlUtils {
 
 			String fileName = matcher.replaceAll("_") + ".mp4";
 			String url = baseUrl + videoContent;
-			System.out.println(url + " " + fileName);
 
+			if (map.containsValue(fileName) || fileName.equals("_.mp4")) {
+				fileName = url.replace(baseVedioPre, "") + fileName;
+			}
+			System.out.println(url + " " + fileName);
 			if (!map.containsKey(url)) {
 				map.put(url, fileName);
 			}
